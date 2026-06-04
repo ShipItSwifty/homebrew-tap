@@ -20,7 +20,8 @@ class Shipit < Formula
   end
 
   test do
-    assert_match "OVERVIEW: Swift-native CLI for iOS and Android app release automation.", shell_output("#{bin}/shipit --help")
-    assert_match "0.1.0", shell_output("#{bin}/shipit --version")
+    assert_match "OVERVIEW: Swift-native CLI for iOS and Android app release automation.",
+                 shell_output("#{bin}/shipit --help")
+    assert_match(/\A\d+\.\d+\.\d+/, shell_output("#{bin}/shipit --version"))
   end
 end
