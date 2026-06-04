@@ -47,7 +47,7 @@ If an install unexpectedly builds from source, check whether `Formula/shipit.rb`
 2. Update `Formula/shipit.rb` with the new source tarball `url` and `sha256`.
 3. Update the formula version table in this README.
 4. Commit and push the formula update.
-5. Run the `Bottle` workflow manually with the released version. The workflow currently builds bottles on `macos-26`, `macos-15`, and `macos-14` so ShipItSwifty CI and common developer Macs can avoid source builds.
+5. Run the `Bottle` workflow manually with the released version. The workflow currently builds bottles on `macos-26`, matching ShipItSwifty's Swift 6.3/Xcode 26 build requirements.
 6. The workflow creates or updates a tap release named `shipit-<version>`, uploads bottle artifacts, merges the generated `bottle do` block into `Formula/shipit.rb`, and commits that bottle block back to `main`.
 7. Verify a fresh install uses a bottle:
 
@@ -60,7 +60,7 @@ brew list --poured-from-bottle | grep '^shipit$'
 shipit --version
 ```
 
-The formula still keeps a source-build fallback for platforms without a matching bottle.
+The formula still keeps a source-build fallback for platforms without a matching bottle. Older GitHub macOS images may compile from source or fail if their Swift toolchain cannot build the upstream package.
 
 ## Uninstall
 

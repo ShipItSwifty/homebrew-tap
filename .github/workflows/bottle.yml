@@ -34,8 +34,6 @@ jobs:
       matrix:
         runner:
           - macos-26
-          - macos-15
-          - macos-14
 
     steps:
       - name: Set up Homebrew
@@ -52,6 +50,7 @@ jobs:
         uses: actions/upload-artifact@v6
         with:
           name: bottles-${{ matrix.runner }}
+          if-no-files-found: error
           path: |
             *.bottle.*
             *.json
@@ -100,5 +99,5 @@ jobs:
             echo "No formula changes to commit."
           else
             git commit -m "${FORMULA} ${VERSION} bottles"
-            git push
+            git push origin HEAD:main
           fi
