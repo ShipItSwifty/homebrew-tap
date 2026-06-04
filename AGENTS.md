@@ -1,0 +1,90 @@
+# ShipItSwifty Homebrew Tap — Agent Guidance
+
+This is the Homebrew tap for [ShipItSwifty](https://github.com/ShipItSwifty/shipitswifty). Its only purpose is to distribute the `shipit` CLI via `brew install`.
+
+## Repository layout
+
+```
+Formula/
+  shipit.rb     # The only formula — keep everything here
+LICENSE
+README.md
+CLAUDE.md
+AGENTS.md
+```
+
+Do not add subdirectories, scripts, CI workflows, or extra Ruby files unless explicitly asked.
+
+## Updating the formula for a new release
+
+1. Download the new tarball and compute its SHA256:
+
+```bash
+curl -L -o /tmp/shipit-<VERSION>.tar.gz \
+  https://github.com/ShipItSwifty/shipitswifty/archive/refs/tags/<VERSION>.tar.gz
+shasum -a 256 /tmp/shipit-<VERSION>.tar.gz
+```
+
+2. Edit `Formula/shipit.rb` — change exactly two fields:
+   - `url` — bump the tag in the URL
+   - `sha256` — replace with the computed checksum
+
+3. Update the formula version table in `README.md`.
+
+4. Validate locally before committing (see Testing section below).
+
+5. Commit with the message `shipit <VERSION>`.
+
+## Testing a formula change locally
+
+Homebrew requires the formula to be inside a registered tap. Use the local directory:
+
+```bash
+brew tap shipitswifty/tap /path/to/this/repo
+brew install --build-from-source shipitswifty/tap/shipit
+brew test shipitswifty/tap/shipit
+# Clean up after testing:
+brew uninstall shipit
+brew untap shipitswifty/tap
+```
+
+For syntax and style checks without installing:
+
+```bash
+brew style Formula/shipit.rb
+brew audit --new Formula/shipit.rb   # use --new only for the first release
+brew audit Formula/shipit.rb         # use this for subsequent updates
+```
+
+## Formula conventions
+
+- `desc` must be a single sentence, no trailing period, ≤ 80 characters.
+- `url` always points to the GitHub archive tarball for the release tag.
+- `sha256` must be computed from the actual downloaded tarball — never guessed.
+- `head` always tracks the `main` branch.
+- `uses_from_macos "swift" => :build` is correct — Swift ships with macOS/Xcode and does not need a separate Homebrew dependency.
+- The `install` block must pass `--disable-sandbox` on macOS and `--static-swift-stdlib` on Linux.
+- The `test` block must assert both `--help` output and `--version` output.
+
+## What NOT to do
+
+- Do not add dependencies beyond `uses_from_macos "swift" => :build`.
+- Do not add casks, tap commands, or aliases.
+- Do not add GitHub Actions or CI config — formula correctness is verified via `brew audit` and local install.
+- Do not copy or reference the ShipItSwifty main repo's architecture docs here.
+
+## Commit style
+
+Single-line messages only:
+
+```
+shipit <VERSION>                        # version bump
+Fix formula build arg for Linux         # bug fix
+Update README install instructions      # docs
+```
+
+## Reference
+
+- Homebrew tap naming convention: repo must be named `homebrew-<tap-name>`; `brew tap <org>/<tap-name>` resolves to `github.com/<org>/homebrew-<tap-name>`.
+- Upstream project: https://github.com/ShipItSwifty/shipitswifty
+- Homebrew formula cookbook: https://docs.brew.sh/Formula-Cookbook
