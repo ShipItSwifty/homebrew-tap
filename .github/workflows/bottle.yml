@@ -75,6 +75,13 @@ jobs:
           find bottles -type f -name "*.bottle.*" -exec mv {} . \;
           find bottles -type f -name "*.json" -exec mv {} . \;
 
+      - name: Normalize release asset names
+        run: |
+          for asset in ${FORMULA}--${VERSION}*.bottle.*; do
+            [ -e "$asset" ] || continue
+            mv "$asset" "${asset/${FORMULA}--${VERSION}/${FORMULA}-${VERSION}}"
+          done
+
       - name: Create or update tap release
         env:
           GH_TOKEN: ${{ github.token }}
