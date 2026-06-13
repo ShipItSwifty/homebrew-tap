@@ -19,7 +19,7 @@ class Shipit < Formula
     args = if OS.mac?
       ["--disable-sandbox"]
     else
-      ["--static-swift-stdlib"]
+      ["--static-swift-stdlib", "-Xlinker", "-L#{Formula["curl"].opt_lib}"]
     end
 
     system "swift", "build", *args, "--configuration", "release", "--product", "shipit"
