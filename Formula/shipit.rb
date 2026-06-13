@@ -8,8 +8,9 @@ class Shipit < Formula
 
   bottle do
     root_url "https://github.com/ShipItSwifty/homebrew-tap/releases/download/shipit-0.2.0"
-    rebuild 1
-    sha256 cellar: :any_skip_relocation, arm64_tahoe: "d9232777bdca984f5524d82d95c5b66cc7dd61a004cf282e835cc8667bcacc6b"
+    rebuild 2
+    sha256 cellar: :any_skip_relocation, arm64_tahoe:  "e2dda55898cb3eabd8b388f2918f9ae4386e20ad6574d6625727d0f543b83153"
+    sha256 cellar: :any,                 x86_64_linux: "1a93dad79bfe0e8ec5572204631b12581ecf22d8ce3953104e102be58c601260"
   end
 
   uses_from_macos "swift" => :build
