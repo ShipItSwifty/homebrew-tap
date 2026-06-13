@@ -12,8 +12,8 @@ class Shipit < Formula
     sha256 cellar: :any_skip_relocation, arm64_tahoe: "d9232777bdca984f5524d82d95c5b66cc7dd61a004cf282e835cc8667bcacc6b"
   end
 
-  uses_from_macos "curl"
   uses_from_macos "swift" => :build
+  uses_from_macos "curl"
 
   def install
     args = if OS.mac?
