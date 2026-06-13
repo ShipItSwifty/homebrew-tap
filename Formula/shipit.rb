@@ -6,6 +6,12 @@ class Shipit < Formula
   license "MIT"
   head "https://github.com/shipitswifty/shipitswifty.git", branch: "main"
 
+  bottle do
+    root_url "https://github.com/ShipItSwifty/homebrew-tap/releases/download/shipit-0.2.0"
+    rebuild 1
+    sha256 cellar: :any_skip_relocation, arm64_tahoe: "d9232777bdca984f5524d82d95c5b66cc7dd61a004cf282e835cc8667bcacc6b"
+  end
+
   uses_from_macos "swift" => :build
 
   def install
