@@ -1,16 +1,10 @@
 class Shipit < Formula
   desc "Swift-native CLI toolkit for iOS and Android release automation"
   homepage "https://github.com/shipitswifty/shipitswifty"
-  url "https://github.com/shipitswifty/shipitswifty/archive/refs/tags/0.1.0.tar.gz"
-  sha256 "8024e63c3b67a3f1c8ddbb31bf0b233c3ca4701ff53525a6bffa54fecc186e53"
+  url "https://github.com/shipitswifty/shipitswifty/archive/refs/tags/0.2.0.tar.gz"
+  sha256 "a7ccc65abf8e304e96995097fe817b174bb3042e475077b7af1b97e0d337da18"
   license "MIT"
   head "https://github.com/shipitswifty/shipitswifty.git", branch: "main"
-
-  bottle do
-    root_url "https://github.com/ShipItSwifty/homebrew-tap/releases/download/shipit-0.1.0"
-    rebuild 1
-    sha256 cellar: :any_skip_relocation, arm64_tahoe: "ccf46d7c2fab735a2ff92bfa0723836fcbb2b79e969f586e5efd1ad5bfcb8982"
-  end
 
   uses_from_macos "swift" => :build
 

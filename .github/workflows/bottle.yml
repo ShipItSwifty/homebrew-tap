@@ -6,7 +6,7 @@ on:
       version:
         description: ShipItSwifty version to bottle
         required: true
-        default: 0.1.0
+        default: 0.2.0
       formula:
         description: Formula name
         required: true

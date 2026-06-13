@@ -1,0 +1,114 @@
+name: Update Formula
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: ShipItSwifty version to publish. Leave blank for latest release.
+        required: false
+        default: ""
+      dispatch_bottle:
+        description: Dispatch the Bottle workflow after committing the formula update.
+        required: false
+        default: "true"
+  schedule:
+    - cron: "17 */6 * * *"
+
+permissions:
+  actions: write
+  contents: write
+
+concurrency:
+  group: update-formula
+  cancel-in-progress: false
+
+jobs:
+  update-formula:
+    name: Update Formula
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Check out tap
+        uses: actions/checkout@v6.0.3
+
+      - name: Resolve release version
+        id: release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          INPUT_VERSION: ${{ inputs.version }}
+        run: |
+          set -euo pipefail
+
+          if [ -n "$INPUT_VERSION" ]; then
+            version="$INPUT_VERSION"
+          else
+            version="$(gh release view --repo ShipItSwifty/shipitswifty --json tagName --jq .tagName)"
+          fi
+
+          current="$(ruby -e 'content = File.read("Formula/shipit.rb"); puts content[/refs\/tags\/(.+?)\.tar\.gz/, 1] || ""')"
+
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "current=$current" >> "$GITHUB_OUTPUT"
+
+          if [ "$version" = "$current" ]; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Update formula files
+        if: steps.release.outputs.changed == 'true'
+        env:
+          VERSION: ${{ steps.release.outputs.version }}
+        run: |
+          set -euo pipefail
+
+          archive="shipit-$VERSION.tar.gz"
+          url="https://github.com/shipitswifty/shipitswifty/archive/refs/tags/$VERSION.tar.gz"
+
+          curl -fsSL -o "$archive" "$url"
+          sha256="$(shasum -a 256 "$archive" | cut -d ' ' -f 1)"
+          export sha256
+
+          ruby <<'RUBY'
+          version = ENV.fetch("VERSION")
+          sha256 = ENV.fetch("sha256")
+
+          formula_path = "Formula/shipit.rb"
+          formula = File.read(formula_path)
+          formula.gsub!(/url "https:\/\/github\.com\/shipitswifty\/shipitswifty\/archive\/refs\/tags\/.+?\.tar\.gz"/, "url \"https://github.com/shipitswifty/shipitswifty/archive/refs/tags/#{version}.tar.gz\"")
+          formula.gsub!(/sha256 "[0-9a-f]{64}"/, "sha256 \"#{sha256}\"")
+          formula.gsub!(/\n  bottle do\n(?:    .+\n)+  end\n/, "\n")
+          File.write(formula_path, formula)
+
+          readme_path = "README.md"
+          readme = File.read(readme_path)
+          readme.gsub!(/\| `shipit` \| [^|]+ \| Swift-native CLI for iOS and Android app release automation \|/, "| `shipit` | #{version} | Swift-native CLI for iOS and Android app release automation |")
+          File.write(readme_path, readme)
+          RUBY
+
+      - name: Commit formula update
+        if: steps.release.outputs.changed == 'true'
+        env:
+          VERSION: ${{ steps.release.outputs.version }}
+        run: |
+          set -euo pipefail
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add Formula/shipit.rb README.md
+
+          if git diff --cached --quiet; then
+            echo "No formula changes to commit."
+            exit 0
+          fi
+
+          git commit -m "shipit $VERSION"
+          git push origin HEAD:main
+
+      - name: Dispatch bottle workflow
+        if: steps.release.outputs.changed == 'true' && (github.event_name == 'schedule' || inputs.dispatch_bottle == 'true')
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ steps.release.outputs.version }}
+        run: gh workflow run bottle.yml --ref main -f version="$VERSION" -f formula=shipit

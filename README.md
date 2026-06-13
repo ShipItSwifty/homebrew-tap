@@ -20,7 +20,7 @@ shipit --version
 
 | Formula | Version | Description |
 |---------|---------|-------------|
-| `shipit` | 0.1.0 | Swift-native CLI for iOS and Android app release automation |
+| `shipit` | 0.2.0 | Swift-native CLI for iOS and Android app release automation |
 
 ## Upgrade
 
@@ -43,13 +43,11 @@ If an install unexpectedly builds from source, check whether `Formula/shipit.rb`
 
 ## Maintainer Release Flow
 
-1. Tag and release the upstream source repo, for example `0.1.0` in `ShipItSwifty/shipitswifty`.
-2. Update `Formula/shipit.rb` with the new source tarball `url` and `sha256`.
-3. Update the formula version table in this README.
-4. Commit and push the formula update.
-5. Run the `Bottle` workflow manually with the released version. The workflow currently builds bottles on `macos-26`, matching ShipItSwifty's Swift 6.3/Xcode 26 build requirements.
-6. The workflow creates or updates a tap release named `shipit-<version>`, uploads bottle artifacts, merges the generated `bottle do` block into `Formula/shipit.rb`, and commits that bottle block back to `main`.
-7. Verify a fresh install uses a bottle:
+1. Tag and release the upstream source repo, for example `0.2.0` in `ShipItSwifty/shipitswifty`.
+2. Let the `Update Formula` workflow pick up the release, or run it manually with the released version.
+3. The updater changes `Formula/shipit.rb`, updates this README, commits the formula bump, and dispatches the `Bottle` workflow.
+4. The bottle workflow creates or updates a tap release named `shipit-<version>`, uploads bottle artifacts, merges the generated `bottle do` block into `Formula/shipit.rb`, and commits that bottle block back to `main`.
+5. Verify a fresh install uses a bottle:
 
 ```sh
 brew untap shipitswifty/tap || true
