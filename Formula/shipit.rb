@@ -14,12 +14,17 @@ class Shipit < Formula
 
   uses_from_macos "swift" => :build
   uses_from_macos "curl"
+  uses_from_macos "libxml2"
 
   def install
     args = if OS.mac?
       ["--disable-sandbox"]
     else
-      ["--static-swift-stdlib", "-Xlinker", "-L#{Formula["curl"].opt_lib}"]
+      [
+        "--static-swift-stdlib",
+        "-Xlinker", "-L#{Formula["curl"].opt_lib}",
+        "-Xlinker", "-L#{Formula["libxml2"].opt_lib}",
+      ]
     end
 
     system "swift", "build", *args, "--configuration", "release", "--product", "shipit"
