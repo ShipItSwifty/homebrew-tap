@@ -22,8 +22,10 @@ class Shipit < Formula
     else
       [
         "--static-swift-stdlib",
-        "-Xlinker", "-L#{Formula["curl"].opt_lib}",
-        "-Xlinker", "-L#{Formula["libxml2"].opt_lib}",
+        "-Xlinker",
+        "-L#{Formula["curl"].opt_lib}",
+        "-Xlinker",
+        "-L#{Formula["libxml2"].opt_lib}",
       ]
     end
 
