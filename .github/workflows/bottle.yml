@@ -34,6 +34,7 @@ jobs:
       matrix:
         runner:
           - macos-26
+          - ubuntu-24.04
 
     steps:
       - name: Set up Homebrew
