@@ -20,7 +20,7 @@ shipit --version
 
 | Formula | Version | Description |
 |---------|---------|-------------|
-| `shipit` | 0.2.0 | Swift-native CLI for iOS and Android app release automation |
+| `shipit` | 0.2.1 | Swift-native CLI for iOS and Android app release automation |
 
 ## Upgrade
 
@@ -42,7 +42,7 @@ shipit --version
 ## Maintainer Release Flow
 
 1. Tag and release the upstream source repo (e.g. `0.2.0` in `ShipItSwifty/shipitswifty`).
-2. Upload the prebuilt binaries to the GitHub release as `shipit-macos-universal.tar.gz` and `shipit-linux-amd64.tar.gz`.
+2. Upload the prebuilt binaries to the GitHub release as `shipit-<VERSION>-macos-universal.tar.gz` and `shipit-<VERSION>-linux-static.tar.gz`.
 3. Let the `Update Formula` workflow pick up the release, or run it manually with the released version.
 4. The updater downloads both binaries, computes their SHA256, updates `Formula/shipit.rb` and this README, then commits and pushes to `main`.
 5. Verify a fresh install works:
