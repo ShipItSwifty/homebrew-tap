@@ -7,15 +7,10 @@ on:
         description: ShipItSwifty version to publish. Leave blank for latest release.
         required: false
         default: ""
-      dispatch_bottle:
-        description: Dispatch the Bottle workflow after committing the formula update.
-        required: false
-        default: "true"
   schedule:
     - cron: "17 */6 * * *"
 
 permissions:
-  actions: write
   contents: write
 
 concurrency:
@@ -45,7 +40,7 @@ jobs:
             version="$(gh release view --repo ShipItSwifty/shipitswifty --json tagName --jq .tagName)"
           fi
 
-          current="$(ruby -e 'content = File.read("Formula/shipit.rb"); puts content[/refs\/tags\/(.+?)\.tar\.gz/, 1] || ""')"
+          current="$(ruby -e 'content = File.read("Formula/shipit.rb"); puts content[/^\s*version "([^"]+)"/, 1] || ""')"
 
           echo "version=$version" >> "$GITHUB_OUTPUT"
           echo "current=$current" >> "$GITHUB_OUTPUT"
@@ -56,29 +51,54 @@ jobs:
             echo "changed=true" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Update formula files
+      - name: Download prebuilt binaries and compute checksums
         if: steps.release.outputs.changed == 'true'
+        id: checksums
         env:
           VERSION: ${{ steps.release.outputs.version }}
         run: |
           set -euo pipefail
 
-          archive="shipit-$VERSION.tar.gz"
-          url="https://github.com/shipitswifty/shipitswifty/archive/refs/tags/$VERSION.tar.gz"
+          base_url="https://github.com/ShipItSwifty/shipitswifty/releases/download/$VERSION"
 
-          curl -fsSL -o "$archive" "$url"
-          sha256="$(shasum -a 256 "$archive" | cut -d ' ' -f 1)"
-          export sha256
+          curl -fsSL -o shipit-macos-universal.tar.gz "$base_url/shipit-macos-universal.tar.gz"
+          macos_sha256="$(sha256sum shipit-macos-universal.tar.gz | cut -d ' ' -f 1)"
+
+          curl -fsSL -o shipit-linux-amd64.tar.gz "$base_url/shipit-linux-amd64.tar.gz"
+          linux_sha256="$(sha256sum shipit-linux-amd64.tar.gz | cut -d ' ' -f 1)"
+
+          echo "macos_sha256=$macos_sha256" >> "$GITHUB_OUTPUT"
+          echo "linux_sha256=$linux_sha256" >> "$GITHUB_OUTPUT"
+
+      - name: Update formula files
+        if: steps.release.outputs.changed == 'true'
+        env:
+          VERSION: ${{ steps.release.outputs.version }}
+          MACOS_SHA256: ${{ steps.checksums.outputs.macos_sha256 }}
+          LINUX_SHA256: ${{ steps.checksums.outputs.linux_sha256 }}
+        run: |
+          set -euo pipefail
 
           ruby <<'RUBY'
-          version = ENV.fetch("VERSION")
-          sha256 = ENV.fetch("sha256")
+          version     = ENV.fetch("VERSION")
+          macos_sha   = ENV.fetch("MACOS_SHA256")
+          linux_sha   = ENV.fetch("LINUX_SHA256")
 
           formula_path = "Formula/shipit.rb"
           formula = File.read(formula_path)
-          formula.gsub!(/url "https:\/\/github\.com\/shipitswifty\/shipitswifty\/archive\/refs\/tags\/.+?\.tar\.gz"/, "url \"https://github.com/shipitswifty/shipitswifty/archive/refs/tags/#{version}.tar.gz\"")
-          formula.gsub!(/sha256 "[0-9a-f]{64}"/, "sha256 \"#{sha256}\"")
-          formula.gsub!(/\n  bottle do\n(?:    .+\n)+  end\n/, "\n")
+
+          formula.sub!(
+            /on_macos do\n    url "[^"]*"\n    sha256 "[^"]*"\n  end/,
+            "on_macos do\n    url \"https://github.com/ShipItSwifty/shipitswifty/releases/download/#{version}/shipit-macos-universal.tar.gz\"\n    sha256 \"#{macos_sha}\"\n  end"
+          )
+
+          formula.sub!(
+            /on_linux do\n    on_intel do\n      url "[^"]*"\n      sha256 "[^"]*"\n    end\n  end/,
+            "on_linux do\n    on_intel do\n      url \"https://github.com/ShipItSwifty/shipitswifty/releases/download/#{version}/shipit-linux-amd64.tar.gz\"\n      sha256 \"#{linux_sha}\"\n    end\n  end"
+          )
+
+          formula.sub!(/version "[^"]*"/, "version \"#{version}\"")
+
           File.write(formula_path, formula)
 
           readme_path = "README.md"
@@ -105,10 +125,3 @@ jobs:
 
           git commit -m "shipit $VERSION"
           git push origin HEAD:main
-
-      - name: Dispatch bottle workflow
-        if: steps.release.outputs.changed == 'true' && (github.event_name == 'schedule' || inputs.dispatch_bottle == 'true')
-        env:
-          GH_TOKEN: ${{ github.token }}
-          VERSION: ${{ steps.release.outputs.version }}
-        run: gh workflow run bottle.yml --ref main -f version="$VERSION" -f formula=shipit

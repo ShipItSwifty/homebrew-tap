@@ -1,36 +1,23 @@
 class Shipit < Formula
   desc "Swift-native CLI toolkit for iOS and Android release automation"
   homepage "https://github.com/shipitswifty/shipitswifty"
-  url "https://github.com/shipitswifty/shipitswifty/archive/refs/tags/0.2.0.tar.gz"
-  sha256 "a7ccc65abf8e304e96995097fe817b174bb3042e475077b7af1b97e0d337da18"
+  version "0.2.0"
   license "MIT"
-  head "https://github.com/shipitswifty/shipitswifty.git", branch: "main"
 
-  bottle do
-    root_url "https://github.com/ShipItSwifty/homebrew-tap/releases/download/shipit-0.2.0"
-    rebuild 1
-    sha256 cellar: :any_skip_relocation, arm64_tahoe: "d9232777bdca984f5524d82d95c5b66cc7dd61a004cf282e835cc8667bcacc6b"
+  on_macos do
+    url "https://github.com/ShipItSwifty/shipitswifty/releases/download/0.2.0/shipit-macos-universal.tar.gz"
+    sha256 "0000000000000000000000000000000000000000000000000000000000000000"
   end
 
-  uses_from_macos "swift" => :build
-  uses_from_macos "curl"
-  uses_from_macos "libxml2"
+  on_linux do
+    on_intel do
+      url "https://github.com/ShipItSwifty/shipitswifty/releases/download/0.2.0/shipit-linux-amd64.tar.gz"
+      sha256 "0000000000000000000000000000000000000000000000000000000000000000"
+    end
+  end
 
   def install
-    args = if OS.mac?
-      ["--disable-sandbox"]
-    else
-      [
-        "--static-swift-stdlib",
-        "-Xlinker",
-        "-L#{Formula["curl"].opt_lib}",
-        "-Xlinker",
-        "-L#{Formula["libxml2"].opt_lib}",
-      ]
-    end
-
-    system "swift", "build", *args, "--configuration", "release", "--product", "shipit"
-    bin.install ".build/release/shipit"
+    bin.install "shipit"
   end
 
   test do
