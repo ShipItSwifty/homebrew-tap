@@ -4,7 +4,7 @@ This is the Homebrew tap for [ShipItSwifty](https://github.com/ShipItSwifty/ship
 
 ## Repository layout
 
-```
+```text
 Formula/
   shipit.rb     # The only formula — keep everything here
 .github/
