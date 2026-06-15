@@ -4,12 +4,14 @@ on:
   pull_request:
     paths:
       - Formula/**
-      - .github/workflows/formula-check.yml
+      - "*.md"
+      - .github/workflows/**
   push:
     branches: [main]
     paths:
       - Formula/**
-      - .github/workflows/formula-check.yml
+      - "*.md"
+      - .github/workflows/**
 
 permissions:
   contents: read
