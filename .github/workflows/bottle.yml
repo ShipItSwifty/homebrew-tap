@@ -78,7 +78,7 @@ jobs:
 
       - name: Normalize release asset names
         run: |
-          for asset in ${FORMULA}--${VERSION}*.bottle.*; do
+          for asset in "./${FORMULA}--${VERSION}"*.bottle.*; do
             [ -e "$asset" ] || continue
             mv "$asset" "${asset/${FORMULA}--${VERSION}/${FORMULA}-${VERSION}}"
           done
@@ -88,15 +88,15 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           if gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
-            gh release upload "$RELEASE_TAG" *.bottle.* --clobber
+            gh release upload "$RELEASE_TAG" ./*.bottle.* --clobber
           else
-            gh release create "$RELEASE_TAG" *.bottle.* \
+            gh release create "$RELEASE_TAG" ./*.bottle.* \
               --title "$FORMULA $VERSION bottles" \
               --notes "Homebrew bottles for $FORMULA $VERSION."
           fi
 
       - name: Merge bottle block into formula
-        run: brew bottle --merge --write --no-commit *.json
+        run: brew bottle --merge --write --no-commit ./*.json
 
       - name: Commit bottle block
         env:
@@ -105,7 +105,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
-          git add Formula/${FORMULA}.rb
+          git add "Formula/${FORMULA}.rb"
           if git diff --cached --quiet; then
             echo "No formula changes to commit."
           else

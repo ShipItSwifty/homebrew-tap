@@ -40,7 +40,7 @@ jobs:
             version="$(gh release view --repo ShipItSwifty/shipitswifty --json tagName --jq .tagName)"
           fi
 
-          current="$(ruby -e 'content = File.read("Formula/shipit.rb"); puts content[/stable do\s+version "(.+?)"/, 1] || ""')"
+          current="$(ruby -e 'content = File.read("Formula/shipit.rb"); puts content[%r{releases/download/([^/]+)/shipit-}, 1] || ""')"
 
           echo "version=$version" >> "$GITHUB_OUTPUT"
           echo "current=$current" >> "$GITHUB_OUTPUT"
@@ -66,8 +66,10 @@ jobs:
 
           export MACOS_URL="$macos_url"
           export LINUX_URL="$linux_url"
-          export MACOS_SHA256="$(shasum -a 256 shipit-macos.tar.gz | cut -d ' ' -f 1)"
-          export LINUX_SHA256="$(shasum -a 256 shipit-linux.tar.gz | cut -d ' ' -f 1)"
+          MACOS_SHA256="$(shasum -a 256 shipit-macos.tar.gz | cut -d ' ' -f 1)"
+          export MACOS_SHA256
+          LINUX_SHA256="$(shasum -a 256 shipit-linux.tar.gz | cut -d ' ' -f 1)"
+          export LINUX_SHA256
 
           ruby <<'RUBY'
           version    = ENV.fetch("VERSION")
@@ -79,7 +81,6 @@ jobs:
           formula_path = "Formula/shipit.rb"
           formula = File.read(formula_path)
 
-          formula.gsub!(/version "[^"]+"/, "version \"#{version}\"")
           formula.gsub!(%r{releases/download/[^/]+/shipit-[^"]+-macos-universal\.tar\.gz},
                         "releases/download/#{version}/shipit-#{version}-macos-universal.tar.gz")
           formula.gsub!(%r{releases/download/[^/]+/shipit-[^"]+-linux-static\.tar\.gz},
