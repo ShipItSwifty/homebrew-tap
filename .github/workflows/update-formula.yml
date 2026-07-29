@@ -37,7 +37,31 @@ jobs:
           if [ -n "$INPUT_VERSION" ]; then
             version="$INPUT_VERSION"
           else
-            version="$(gh release view --repo ShipItSwifty/shipitswifty --json tagName --jq .tagName)"
+            # shellcheck disable=SC2016 # jq variables are intentionally single-quoted.
+            version="$(
+              gh api "repos/ShipItSwifty/shipitswifty/releases?per_page=100" --jq '
+                [
+                  .[]
+                  | select(.draft == false and .prerelease == false)
+                  | . as $release
+                  | select(
+                      any(
+                        .assets[];
+                        .name == ("shipit-" + $release.tag_name + "-macos-universal.tar.gz")
+                      )
+                      and any(
+                        .assets[];
+                        .name == ("shipit-" + $release.tag_name + "-linux-static.tar.gz")
+                      )
+                    )
+                ][0].tag_name // empty
+              '
+            )"
+
+            if [ -z "$version" ]; then
+              echo "::error::No upstream release has both required binary archives."
+              exit 1
+            fi
           fi
 
           current="$(ruby -e 'content = File.read("Formula/shipit.rb"); puts content[%r{releases/download/([^/]+)/shipit-}, 1] || ""')"
