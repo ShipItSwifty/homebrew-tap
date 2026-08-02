@@ -48,7 +48,7 @@ jobs:
           brew test-bot --only-formulae --root-url="$ROOT_URL" --testing-formulae="$FORMULA" --skip-dependents --skip-online-checks
 
       - name: Upload bottle artifacts
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: bottles-${{ matrix.runner }}
           if-no-files-found: error
@@ -67,7 +67,7 @@ jobs:
         uses: Homebrew/actions/setup-homebrew@main
 
       - name: Download bottle artifacts
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v8
         with:
           path: bottles
 
