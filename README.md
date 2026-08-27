@@ -20,7 +20,7 @@ shipit --version
 
 | Formula | Version | Description |
 |---------|---------|-------------|
-| `shipit` | 0.5.1 | Swift-native CLI for iOS and Android app release automation |
+| `shipit` | 0.6.1 | Swift-native CLI for iOS and Android app release automation |
 
 ## Upgrade
 
