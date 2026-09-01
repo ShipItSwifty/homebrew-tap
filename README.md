@@ -32,7 +32,7 @@ app-store-connect-mcp --version
 | Formula | Version | Description |
 |---------|---------|-------------|
 | `shipit` | 0.6.1 | Swift-native CLI for iOS and Android app release automation |
-| `app-store-connect-mcp` | 0.1.3 | MCP server for the App Store Connect and Xcode Cloud read API |
+| `app-store-connect-mcp` | 0.1.4 | MCP server for the App Store Connect and Xcode Cloud read API |
 
 ## Upgrade
 
