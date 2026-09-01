@@ -7,10 +7,15 @@ Swift-native CLIs for iOS and Android release automation.
 
 ```sh
 brew tap shipitswifty/tap
+brew trust shipitswifty/tap   # Homebrew 6+ requires trusting non-official taps once
 
 brew install shipit                 # release-automation CLI
 brew install app-store-connect-mcp  # App Store Connect / Xcode Cloud MCP server
 ```
+
+> `brew trust` is a one-time, per-machine step. Without it, Homebrew 6 refuses to
+> load the formulae ("Refusing to load formula … from untrusted tap"). CI images
+> set `HOMEBREW_NO_REQUIRE_TAP_TRUST=1` instead — see [CI Install](#ci-install).
 
 ## Usage
 
@@ -42,6 +47,7 @@ brew upgrade app-store-connect-mcp
 Use the tap in CI the same way as local installs. Homebrew downloads the prebuilt binary — no Swift toolchain or compilation required.
 
 ```sh
+export HOMEBREW_NO_REQUIRE_TAP_TRUST=1   # non-interactive equivalent of `brew trust`
 brew tap shipitswifty/tap
 brew install shipit
 shipit --version
@@ -67,6 +73,7 @@ repo on a schedule (and on manual dispatch).
 brew untap shipitswifty/tap || true
 brew uninstall --force shipit app-store-connect-mcp || true
 brew tap shipitswifty/tap
+brew trust shipitswifty/tap
 brew install shipit app-store-connect-mcp
 shipit --version
 app-store-connect-mcp --version
