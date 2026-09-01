@@ -27,7 +27,7 @@ app-store-connect-mcp --version
 | Formula | Version | Description |
 |---------|---------|-------------|
 | `shipit` | 0.6.1 | Swift-native CLI for iOS and Android app release automation |
-| `app-store-connect-mcp` | 0.1.2 | MCP server for the App Store Connect and Xcode Cloud read API |
+| `app-store-connect-mcp` | 0.1.3 | MCP server for the App Store Connect and Xcode Cloud read API |
 
 ## Upgrade
 
@@ -55,7 +55,7 @@ repo on a schedule (and on manual dispatch).
 | Formula | Upstream repo | Release archives | Updater workflow |
 |---------|---------------|------------------|------------------|
 | `shipit` | `ShipItSwifty/shipitswifty` | `shipit-<VERSION>-macos-universal.tar.gz`, `shipit-<VERSION>-linux-static.tar.gz` | `Update Formula` |
-| `app-store-connect-mcp` | `ShipItSwifty/app-store-connect-mcp` | `app-store-connect-mcp-<VERSION>-macos-universal.tar.gz`, `app-store-connect-mcp-<VERSION>-linux-x86_64.tar.gz` | `Update Formula (app-store-connect-mcp)` |
+| `app-store-connect-mcp` | 0.1.3 | `app-store-connect-mcp-<VERSION>-macos-universal.tar.gz`, `app-store-connect-mcp-<VERSION>-linux-x86_64.tar.gz` | `Update Formula (app-store-connect-mcp)` |
 
 1. Tag and release the upstream source repo (e.g. `0.2.1`).
 2. The upstream `Release` workflow uploads the prebuilt archives listed above.
