@@ -118,8 +118,10 @@ jobs:
 
           readme_path = "README.md"
           readme = File.read(readme_path)
-          readme.gsub!(/\| `app-store-connect-mcp` \| [^|]+ \|/,
-                       "| `app-store-connect-mcp` | #{version} |")
+          # Anchor on the description cell so only the "Formulas" table row is
+          # touched — other tables also start a row with `| `app-store-connect-mcp` |`.
+          readme.gsub!(/\| `app-store-connect-mcp` \| [^|]+ \| MCP server for the App Store Connect and Xcode Cloud read API \|/,
+                       "| `app-store-connect-mcp` | #{version} | MCP server for the App Store Connect and Xcode Cloud read API |")
           File.write(readme_path, readme)
           RUBY
 
