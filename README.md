@@ -11,6 +11,7 @@ brew trust shipitswifty/tap   # Homebrew 6+ requires trusting non-official taps 
 
 brew install shipit                 # release-automation CLI
 brew install app-store-connect-mcp  # App Store Connect / Xcode Cloud MCP server
+brew install google-play-store-mcp  # Google Play Developer API MCP server
 ```
 
 > `brew trust` is a one-time, per-machine step. Without it, Homebrew 6 refuses to
@@ -25,6 +26,9 @@ shipit --version
 
 app-store-connect-mcp --help
 app-store-connect-mcp --version
+
+google-play-store-mcp --help
+google-play-store-mcp --version
 ```
 
 ## Formulas
@@ -33,6 +37,7 @@ app-store-connect-mcp --version
 |---------|---------|-------------|
 | `shipit` | 0.6.1 | Swift-native CLI for iOS and Android app release automation |
 | `app-store-connect-mcp` | 0.1.6 | MCP server for the App Store Connect and Xcode Cloud read API |
+| `google-play-store-mcp` | 0.1.0 | MCP server for the Google Play Developer API |
 
 ## Upgrade
 
@@ -40,6 +45,7 @@ app-store-connect-mcp --version
 brew update
 brew upgrade shipit
 brew upgrade app-store-connect-mcp
+brew upgrade google-play-store-mcp
 ```
 
 ## CI Install
