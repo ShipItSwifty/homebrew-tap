@@ -7,13 +7,13 @@ class GooglePlayStoreMcp < Formula
 
   stable do
     on_macos do
-      url "https://github.com/ShipItSwifty/google-play-store-mcp/releases/download/0.1.1/google-play-store-mcp-0.1.1-macos-universal.tar.gz"
-      sha256 "90b15348050463209feeff571cbe22b6cf770a2c759c3e74e0319437aa16e712"
+      url "https://github.com/ShipItSwifty/google-play-store-mcp/releases/download/0.1.2/google-play-store-mcp-0.1.2-macos-universal.tar.gz"
+      sha256 "0b9d07fb0fafb7677c213fa59187a10ac2f1ed335ad333a18072b4c0d19cc3a3"
     end
 
     on_linux do
-      url "https://github.com/ShipItSwifty/google-play-store-mcp/releases/download/0.1.1/google-play-store-mcp-0.1.1-linux-x86_64.tar.gz"
-      sha256 "eaf6c1f49704249620377addff199e470c36078f62a7ab4af3bbf84dccd708e7"
+      url "https://github.com/ShipItSwifty/google-play-store-mcp/releases/download/0.1.2/google-play-store-mcp-0.1.2-linux-x86_64.tar.gz"
+      sha256 "d7d8abef02fe71a5e297a729f3c103cc04cf10902cc4e017bf30483e320c431b"
     end
   end
 
