@@ -7,13 +7,13 @@ class AppStoreConnectMcp < Formula
 
   stable do
     on_macos do
-      url "https://github.com/ShipItSwifty/app-store-connect-mcp/releases/download/0.2.0/app-store-connect-mcp-0.2.0-macos-universal.tar.gz"
-      sha256 "ab8fc90197b19982e5c6ffd1432227c8fee166fa5ef00c6e2b93deaa14150035"
+      url "https://github.com/ShipItSwifty/app-store-connect-mcp/releases/download/0.2.1/app-store-connect-mcp-0.2.1-macos-universal.tar.gz"
+      sha256 "ba4cb44dba396a5e1ad56dcf4dbaed93eca8ebbb0cf6311948d48a473b0e4a3c"
     end
 
     on_linux do
-      url "https://github.com/ShipItSwifty/app-store-connect-mcp/releases/download/0.2.0/app-store-connect-mcp-0.2.0-linux-x86_64.tar.gz"
-      sha256 "9f0b9b04056961dee8c93f084b8fe1e94fdaee395aa4e3bc86616fab50012be8"
+      url "https://github.com/ShipItSwifty/app-store-connect-mcp/releases/download/0.2.1/app-store-connect-mcp-0.2.1-linux-x86_64.tar.gz"
+      sha256 "59efb22337bd46784cfddb7e6ee0a205909061a0c74c6425542f3571a7b13c8c"
     end
   end
 
