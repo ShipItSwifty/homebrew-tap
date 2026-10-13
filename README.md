@@ -35,7 +35,7 @@ google-play-store-mcp --version
 
 | Formula | Version | Description |
 |---------|---------|-------------|
-| `shipit` | 0.6.1 | Swift-native CLI for iOS and Android app release automation |
+| `shipit` | 0.7.0 | Swift-native CLI for iOS and Android app release automation |
 | `app-store-connect-mcp` | 0.2.2 | MCP server for the App Store Connect and Xcode Cloud read API |
 | `google-play-store-mcp` | 0.2.1 | MCP server for the Google Play Developer API |
 

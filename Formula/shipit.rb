@@ -7,13 +7,13 @@ class Shipit < Formula
 
   stable do
     on_macos do
-      url "https://github.com/ShipItSwifty/shipitswifty/releases/download/0.6.1/shipit-0.6.1-macos-universal.tar.gz"
-      sha256 "57a21bb23aa6877c2f5fb710389380773f598cccdf9cba863ebdb05ab946bad0"
+      url "https://github.com/ShipItSwifty/shipitswifty/releases/download/0.7.0/shipit-0.7.0-macos-universal.tar.gz"
+      sha256 "c89723ed423938f10707a16d09ddf5aabd63694713052d5c8af12cc1362174cc"
     end
 
     on_linux do
-      url "https://github.com/ShipItSwifty/shipitswifty/releases/download/0.6.1/shipit-0.6.1-linux-static.tar.gz"
-      sha256 "affa930e62a701f979d8ee6c50cc24f1541701aced89299ed9bf74883a09d7b7"
+      url "https://github.com/ShipItSwifty/shipitswifty/releases/download/0.7.0/shipit-0.7.0-linux-static.tar.gz"
+      sha256 "3d169b035e4c3a12fae8b7f73884be0e99df5566881fd0d01f9520cf215ed53b"
     end
   end
 
